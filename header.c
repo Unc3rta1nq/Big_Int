@@ -22,7 +22,6 @@ BigNum GetBigNumByStr(const char* str, size_t* bigNumSize, char* sign)
 
 	// Calculate the size of BigNum in bytes with some extra space
 	size_t strSize = strlen(str);
-
 	size_t integer_part = strSize / 8;
 	size_t remainder = strSize % 8; // remainder
 
@@ -30,7 +29,6 @@ BigNum GetBigNumByStr(const char* str, size_t* bigNumSize, char* sign)
 
 	// Allocate memory
 	BigNum bigNum = (BigNum)malloc((*bigNumSize) * sizeof(unsigned int));
-
 	size_t j = 0;
 	char buffer[9];
 
@@ -91,7 +89,10 @@ BIG add(BIG* first, BIG* second, int flag)
 		if (size_a && size_b)
 		{
 			result.bigNum[i] = first->bigNum[i] + second->bigNum[i] + rest;
-			if (result.bigNum[i] < first->bigNum[i] || result.bigNum[i] < second->bigNum[i] || ((result.bigNum[i] == first->bigNum[i] && second->bigNum[i] != 0) || (result.bigNum[i] == second->bigNum[i] && first->bigNum[i] != 0))) 			//проверяем остаток
+			if (result.bigNum[i] < first->bigNum[i] || 
+				result.bigNum[i] < second->bigNum[i] ||
+				((result.bigNum[i] == first->bigNum[i] && second->bigNum[i] != 0) ||
+				(result.bigNum[i] == second->bigNum[i] && first->bigNum[i] != 0))) 			//проверяем остаток
 				rest = 1;
 			else
 				rest = 0;
@@ -222,9 +223,9 @@ void PrintBigNum(BIG* num) {
 
 int compare(BIG* first, BIG* second)
 {
-	if (first->size > second->size)
+	if ((first->size > second->size) || second->sign == '-')
 		return 1;
-	if (first->size < second->size)
+	if ((first->size < second->size) || first->sign == '-')
 		return 2;
 	if (first->size == second->size) {
 		for (int i = (int)(first->size) - 1; i >= 0; i--)
@@ -237,10 +238,6 @@ int compare(BIG* first, BIG* second)
 				continue;
 		}
 	}
-	if (first->sign == '-')
-		return 2;
-	if (second->sign == '-')
-		return 1;
 	return 0;
 }
 
